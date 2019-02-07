@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.gome.slidebar.MainActivity">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.gome.slidebar.ComputeScrollRecycleView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+
+        <com.gome.slidebar.LetterFlagView
+            android:id="@+id/letter_flag_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </FrameLayout>
+
+
+    <com.gome.slidebar.Sidebar
+        android:id="@+id/side_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="right"
+        app:bar_background="@drawable/folder_all_apps_window_sidebar_bg"
+        app:bar_height="450dp"
+        app:bar_text_color="@color/side_bar_text_color"
+        app:bar_text_size="11sp"
+        app:bar_width="32dp">
+
+        <TextView
+            android:layout_width="45dp"
+            android:layout_height="65dp"
+            android:layout_gravity="center_vertical|right"
+            android:layout_marginRight="42dp"
+            android:background="@drawable/text_view_bg"
+            android:gravity="center"
+            android:text="X"
+            android:textColor="#FFFFFF"
+            android:textSize="25dp" />
+
+    </com.gome.slidebar.Sidebar>
+
+
+</FrameLayout>

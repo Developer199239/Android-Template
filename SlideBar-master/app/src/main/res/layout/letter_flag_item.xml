@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/letter_item_height"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/letter_flag"
+        android:layout_width="match_parent"
+        android:layout_height="19dp"
+        android:background="#FFFFFF"
+        android:gravity="left"
+        android:paddingLeft="10dp"
+        android:textColor="#51b038" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#d8d8d8"
+        android:paddingLeft="2dp" />
+
+</LinearLayout>
