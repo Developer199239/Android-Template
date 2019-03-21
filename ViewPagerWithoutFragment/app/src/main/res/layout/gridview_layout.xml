@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/parentLayout"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:weightSum="8"
+        android:gravity="center"
+        >
+        <ImageView
+            android:layout_weight="6.5"
+            android:src="@drawable/ui_elements_menu_icon_new_sim_sale"
+            android:id="@+id/android_gridview_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:gravity="center"
+            android:scaleType="fitCenter"
+            />
+        <TextView
+            android:text="ok"
+            android:id="@+id/android_gridview_text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:textSize="12sp"
+            android:layout_weight="1.5"
+            android:gravity="center_horizontal|top"
+            />
+
+    </LinearLayout>
+
+</LinearLayout>
