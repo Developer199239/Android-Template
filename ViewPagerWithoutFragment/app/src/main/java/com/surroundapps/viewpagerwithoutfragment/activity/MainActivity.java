@@ -1,4 +1,4 @@
-package com.surroundapps.viewpagerwithoutfragment;
+package com.surroundapps.viewpagerwithoutfragment.activity;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.surroundapps.viewpagerwithoutfragment.R;
+import com.surroundapps.viewpagerwithoutfragment.adapter.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,8 +28,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
-
         listDate.add("1");
         listDate.add("2");
         listDate.add("3");
@@ -37,8 +38,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.post(new Runnable() {
             @Override
             public void run() {
-                int height = viewPager.getHeight()/3;
-                int width = viewPager.getWidth()/3;
+                int height = viewPager.getHeight()/4;
+                int width = viewPager.getWidth()/4;
                 setupViewPager(height);
             }
         });

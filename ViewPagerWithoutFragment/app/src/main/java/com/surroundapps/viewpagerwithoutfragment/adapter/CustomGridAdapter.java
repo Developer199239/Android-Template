@@ -1,4 +1,4 @@
-package com.surroundapps.viewpagerwithoutfragment;
+package com.surroundapps.viewpagerwithoutfragment.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,6 +10,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.surroundapps.viewpagerwithoutfragment.R;
 
 public class CustomGridAdapter extends BaseAdapter {
 
