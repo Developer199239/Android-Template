@@ -8,38 +8,40 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.surroundapps.viewpagerwithoutfragment.R;
 import com.surroundapps.viewpagerwithoutfragment.adapter.ViewPagerAdapter;
+import com.surroundapps.viewpagerwithoutfragment.callback.ItemSelectInterface;
+import com.surroundapps.viewpagerwithoutfragment.model.DataModel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
 //https://medium.com/@jerrylinjf/use-viewpager-without-fragment-906e3643fec3
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener{
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, ItemSelectInterface {
 
     private LinearLayout pager_indicator;
     ViewPager viewPager;
     private int dotsCount;
     ViewPagerAdapter mAdapter;
     private ImageView[] dots;
-    List<String> listDate = new ArrayList<>();
+    ArrayList<ArrayList<DataModel>> listDate = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        listDate.add("1");
-        listDate.add("2");
-        listDate.add("3");
-
         viewPager = findViewById(R.id.viewpager);
-        pager_indicator = (LinearLayout) findViewById(R.id.viewPagerCountDots);
+        pager_indicator = findViewById(R.id.viewPagerCountDots);
 
         viewPager.post(new Runnable() {
             @Override
             public void run() {
-                int height = viewPager.getHeight()/4;
-                int width = viewPager.getWidth()/4;
+                listDate = populateData();
+                int height = viewPager.getHeight() / 4;
                 setupViewPager(height);
             }
         });
@@ -47,8 +49,52 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
-    private void setupViewPager(int h){
-        mAdapter = new ViewPagerAdapter(MainActivity.this, listDate,h);
+    private ArrayList<ArrayList<DataModel>> populateData() {
+
+        String[] gridViewString = {
+                "Alaram", "Android", "Mobile", "Website", "Profile", "WordPress",
+                "ActionScript", "Ada", "Agora", "Alice", "Argus", "Bash",
+                "Boo", "BPEL", "C", "C++", "CDuce", "Ceylon",
+                "Darwin", "Draco", "DRAKON", "C--", "Dylan", "D",
+                "E", "Ease", "EGL", "Epigram", "Esterel", "EXEC 2",
+                "F", "FFP", "Forth", "Franz Lisp", "Factor", "Flavors",
+                "G", "GDScript", "Golo", "GraphTalk", "Io", "KEE",
+
+        };
+
+        int[] gridViewImageId = {
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+                R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale, R.drawable.ui_elements_menu_icon_new_sim_sale,
+        };
+
+
+        ArrayList<DataModel> stringImagesList = new ArrayList<>();
+        for(int i = 0; i<gridViewString.length; i++) {
+            DataModel dataModel = new DataModel(gridViewString[i],gridViewImageId[i]);
+            stringImagesList.add(dataModel);
+        }
+
+        ArrayList<ArrayList<DataModel>> listDate = new ArrayList<>();
+
+        int perPageGridSize = 12;
+
+        for (int start = 0; start < gridViewString.length; start += perPageGridSize) {
+            int end = Math.min(start + perPageGridSize, gridViewString.length);
+            List<DataModel> sublist = stringImagesList.subList(start, end);
+            listDate.add(new ArrayList<>(sublist));
+        }
+
+        return listDate;
+    }
+
+
+    private void setupViewPager(int h) {
+        mAdapter = new ViewPagerAdapter(MainActivity.this, listDate, h);
         viewPager.setAdapter(mAdapter);
         viewPager.setCurrentItem(0);
         viewPager.setOnPageChangeListener(this);
@@ -114,5 +160,11 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int i) {
 
+    }
+
+    @Override
+    public void onClick(DataModel dataModel, int position) {
+
+        Toast.makeText(this, "text: "+dataModel.getText() + ", Position: "+position, Toast.LENGTH_SHORT).show();
     }
 }

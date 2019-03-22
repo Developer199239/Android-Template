@@ -12,26 +12,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.surroundapps.viewpagerwithoutfragment.R;
+import com.surroundapps.viewpagerwithoutfragment.callback.ItemSelectInterface;
+import com.surroundapps.viewpagerwithoutfragment.model.DataModel;
+
+import java.util.ArrayList;
 
 public class CustomGridAdapter extends BaseAdapter {
 
     private Context mContext;
-    private final String[] gridViewString;
-    private final int[] gridViewImageId;
     private final int rowHeight;
+    private ArrayList<DataModel> dataList;
 
 
-    public CustomGridAdapter(Context context, String[] gridViewString, int[] gridViewImageId, int rowHeight) {
+    public CustomGridAdapter(Context context, ArrayList<DataModel> data, int rowHeight) {
         mContext = context;
-        this.gridViewImageId = gridViewImageId;
-        this.gridViewString = gridViewString;
+        this.dataList = data;
         this.rowHeight = rowHeight;
     }
 
 
     @Override
     public int getCount() {
-        return gridViewString.length;
+        return dataList.size();
     }
 
     @Override
@@ -62,26 +64,21 @@ public class CustomGridAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.gridview_layout, null);
             viewHolder = new ViewHolder(convertView);
             convertView.setTag(viewHolder);
-            /*TextView textViewAndroid = (TextView) convertView.findViewById(R.id.android_gridview_text);
-            ImageView imageViewAndroid = (ImageView) convertView.findViewById(R.id.android_gridview_image);
-            textViewAndroid.setText(gridViewString[position]);
-            imageViewAndroid.setImageResource(gridViewImageId[position]);
-            LinearLayout parentLayout = (LinearLayout) convertView.findViewById(R.id.parentLayout);
-            parentLayout.setLayoutParams(new LinearLayout.LayoutParams(GridView.AUTO_FIT, rowHeight));*/
         } else {
-//            gridViewAndroid = (View) convertView;
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
-        viewHolder.textView.setText(gridViewString[position]);
-        viewHolder.imageView.setImageResource(gridViewImageId[position]);
-        LinearLayout parentLayout = (LinearLayout) convertView.findViewById(R.id.parentLayout);
+        final DataModel dataModel = dataList.get(position);
+        viewHolder.textView.setText(dataModel.getText());
+        viewHolder.imageView.setImageResource(dataModel.getImage());
+        LinearLayout parentLayout = convertView.findViewById(R.id.parentLayout);
         parentLayout.setLayoutParams(new LinearLayout.LayoutParams(GridView.AUTO_FIT, rowHeight));
 
         viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, "GridView Item: " + gridViewString[position], Toast.LENGTH_SHORT).show();
+                ItemSelectInterface itemSelectInterface = (ItemSelectInterface) mContext;
+                itemSelectInterface.onClick(dataModel,position);
             }
         });
 
