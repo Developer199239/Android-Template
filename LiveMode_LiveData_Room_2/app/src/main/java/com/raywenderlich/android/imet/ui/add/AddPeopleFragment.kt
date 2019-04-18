@@ -36,19 +36,23 @@ package com.raywenderlich.android.imet.ui.add
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.*
+import androidx.lifecycle.ViewModelProviders
 import com.raywenderlich.android.imet.IMetApp
 import com.raywenderlich.android.imet.R
 import com.raywenderlich.android.imet.data.model.People
+import com.raywenderlich.android.imet.ui.details.PeopleDetailsViewModel
 import kotlinx.android.synthetic.main.fragment_add_people.*
 
 /**
  * The Fragment to add people
  */
 class AddPeopleFragment : Fragment() {
+  private lateinit var viewModel: AddPeopleViewModel
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setHasOptionsMenu(true)
+    viewModel = ViewModelProviders.of(this).get(AddPeopleViewModel::class.java)
   }
 
   override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
@@ -83,7 +87,9 @@ class AddPeopleFragment : Fragment() {
         textInputFacebook.editText?.text.toString(),
         textInputTwitter.editText?.text.toString()
     )
-    (activity?.application as IMetApp).getPeopleRepository().insertPeople(people)
+//    (activity?.application as IMetApp).getPeopleRepository().insertPeople(people)
+      viewModel.addPeople(people)
+
 
     activity?.finish()
   }

@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.appcompat.widget.SearchView
 import android.view.*
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProviders
 import com.raywenderlich.android.imet.IMetApp
 import com.raywenderlich.android.imet.R
 import com.raywenderlich.android.imet.data.model.People
@@ -29,20 +31,17 @@ class PeoplesListFragment : Fragment(),
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
 
-        viewModel =
-    }
+        viewModel = ViewModelProviders.of(this).get(PeoplesListViewModel::class.java)
 
-    override fun onResume() {
-        super.onResume()
-
-        val peopleRepository = (activity?.application as IMetApp).getPeopleRepository()
-
-        peopleRepository.getAllPeople().observe(this, Observer {
-            peopleList->
-            populatePeopleList(peopleList!!)
+        // start observing people list
+        viewModel.getPeopleList().observe(this, Observer<List<People>>{
+            peoples->
+            peoples?.let {
+                populatePeopleList(peoples)
+            }
         })
-
     }
+
 
     override fun onCreateView(
             inflater: LayoutInflater, container: ViewGroup?,
@@ -80,6 +79,7 @@ class PeoplesListFragment : Fragment(),
      * Callback for searchView query submit
      */
     override fun onQueryTextSubmit(query: String?): Boolean {
+        viewModel.searchPeople(query!!)
         return true
     }
 
@@ -87,6 +87,8 @@ class PeoplesListFragment : Fragment(),
      * Callback for searchView close
      */
     override fun onClose(): Boolean {
+        viewModel.getAllPeople()
+        searchView.onActionViewCollapsed()
         return true
     }
 

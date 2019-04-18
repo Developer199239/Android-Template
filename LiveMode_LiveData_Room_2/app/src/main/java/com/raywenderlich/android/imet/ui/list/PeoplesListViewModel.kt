@@ -29,4 +29,11 @@ class PeoplesListViewModel(application: Application) : AndroidViewModel(applicat
         }
     }
 
+    fun searchPeople(name: String) {
+        peopleList.addSource(peopleRepository.findPeople(name)) {
+            peoples->
+            peopleList.postValue(peoples)
+        }
+    }
+
 }
