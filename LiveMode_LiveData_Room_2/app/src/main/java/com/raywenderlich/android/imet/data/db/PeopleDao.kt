@@ -31,38 +31,35 @@
  *
  */
 
-package com.raywenderlich.android.imet.data
+package com.raywenderlich.android.imet.data.db
 
-import android.app.Application
 import androidx.lifecycle.LiveData
-import com.raywenderlich.android.imet.data.db.PeopleDao
-import com.raywenderlich.android.imet.data.db.PeopleDatabase
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
 import com.raywenderlich.android.imet.data.model.People
 
-class PeopleRepository(application: Application) {
+@Dao
+interface PeopleDao {
 
-  private val peopleDao: PeopleDao
+  // 1: Select All
+  @Query("SELECT * FROM People ORDER BY id DESC")
+  fun getAll(): LiveData<List<People>>
 
-  init {
-    val peopleDatabase = PeopleDatabase.getInstance(application)
-    peopleDao = peopleDatabase.peopleDao()
-  }
+  // 2: Insert
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  fun insert(people: People)
 
-  fun getAllPeople(): LiveData<List<People>> {
-    return peopleDao.getAll()
-  }
+  // 3: Delete
+  @Query("DELETE FROM People")
+  fun deleteAll()
 
-  fun insertPeople(people: People) {
-    peopleDao.insert(people)
-  }
+  // 4: Select by id
+  @Query("SELECT * FROM People WHERE id = :id")
+  fun find(id: Int): LiveData<People>
 
-  fun findPeople(id: Int): LiveData<People> {
-    return peopleDao.find(id)
-  }
-
-
-  fun findPeople(name: String): LiveData<List<People>> {
-    return peopleDao.findBy(name)
-  }
+  @Query("SELECT * FROM People WHERE name LIKE '%' || :name || '%'")
+  fun findBy(name: String): LiveData<List<People>>
 
 }

@@ -56,14 +56,14 @@ class PeopleDetailsFragment : Fragment() {
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
 
-    // Find people with provided id
-    val peopleId = activity?.intent?.getIntExtra(getString(R.string.people_id), 0)
-    peopleId?.let {
-      val peopleDetails = (activity?.application as IMetApp)
-          .getPeopleRepository()
-          .findPeople(peopleId)
-      populatePeopleDetails(peopleDetails)
-    }
+//    // Find people with provided id
+//    val peopleId = activity?.intent?.getIntExtra(getString(R.string.people_id), 0)
+//    peopleId?.let {
+//      val peopleDetails = (activity?.application as IMetApp)
+//          .getPeopleRepository()
+//          .findPeople(peopleId)
+//      populatePeopleDetails(peopleDetails)
+//    }
   }
 
   /**
