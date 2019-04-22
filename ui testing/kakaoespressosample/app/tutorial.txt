@@ -1,0 +1,10 @@
+https://proandroiddev.com/writing-ui-tests-with-espresso-and-kakao-409c95d325bf
+example for this project:
+https://github.com/jcmsalves/kakao-espresso-sample/tree/master/app/src/androidTest/java/com/jcmsalves/kakaosample
+
+
+other need to study:
+https://github.com/search?q=Kakao+ui+testing&type=Repositories
+
+kakao lib:
+https://github.com/agoda-com/Kakao

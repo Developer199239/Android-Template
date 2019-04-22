@@ -1,0 +1,1 @@
+/Users/murtuza/Desktop/Android-Template/SimpleNote_Using_Coroutine/buildSrc/build/classes/kotlin/main/Dependencies.class:/Users/murtuza/Desktop/Android-Template/SimpleNote_Using_Coroutine/buildSrc/build/classes/kotlin/main/Versions.class

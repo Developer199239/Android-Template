@@ -1,0 +1,73 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+  compileSdkVersion 28
+  defaultConfig {
+    applicationId "com.raywenderlich.android.bottomsup"
+    minSdkVersion 21
+    targetSdkVersion 28
+    versionCode 1
+    versionName "1.0"
+    testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+  }
+  buildTypes {
+    release {
+      minifyEnabled false
+      proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+    }
+  }
+}
+
+ext {
+  supportLib = '1.0.0-beta01'
+  dagger = "2.11"
+  retrofit = "2.3.0"
+}
+
+dependencies {
+  implementation fileTree(dir: 'libs', include: ['*.jar'])
+  // Testing
+  testImplementation 'junit:junit:4.12'
+
+  // Support Libs
+  implementation "androidx.appcompat:appcompat:$supportLib"
+  implementation "androidx.recyclerview:recyclerview:$supportLib"
+  implementation "com.google.android.material:material:$supportLib"
+  implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+
+  implementation 'com.github.bumptech.glide:glide:4.3.0'
+
+  // Android Architecture Components
+//  compile "android.arch.lifecycle:runtime:1.1.0"
+//  compile "android.arch.lifecycle:extensions:1.1.0"
+//  kapt "android.arch.lifecycle:compiler:1.1.0"
+
+  def room_version = "2.1.0-alpha06"
+//
+//    def roomVersion = "1.1.1"
+//    implementation "android.arch.persistence.room:runtime:$roomVersion"
+//    kapt "android.arch.persistence.room:compiler:$roomVersion"
+
+
+  implementation "androidx.room:room-runtime:$room_version"
+  kapt "androidx.room:room-compiler:$room_version"
+
+  def lifecycle_version = "2.0.0"
+  // ViewModel and LiveData
+  implementation "androidx.lifecycle:lifecycle-extensions:$lifecycle_version"
+
+  // Kotlin
+  implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+  // Dependency Injection
+  implementation "com.google.dagger:dagger:$dagger"
+  kapt "com.google.dagger:dagger-compiler:$dagger"
+
+  // Networking
+  implementation "com.squareup.retrofit2:retrofit:$retrofit"
+  implementation "com.squareup.retrofit2:converter-gson:$retrofit"
+  implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+}

@@ -1,0 +1,62 @@
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
+
+android {
+    compileSdkVersion Versions.compileSdkVersion
+    defaultConfig {
+        applicationId "jalilurrahman.com.simplenote_using_coroutine"
+        minSdkVersion Versions.minSdkVersion
+        targetSdkVersion Versions.targetSdkVersion
+        versionCode Versions.versionCode
+        versionName Versions.versionName
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    dataBinding {
+        enabled = true
+    }
+    androidExtensions {
+        experimental = true
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation Dependencies.kotlin_stdlib
+    implementation Dependencies.appComptact
+    implementation Dependencies.constraint_layout
+    testImplementation Dependencies.junit
+    androidTestImplementation Dependencies.test_runner
+    androidTestImplementation Dependencies.espresso
+
+    // jetpack
+    kapt Dependencies.room_kept
+    kapt Dependencies.glide_kept
+    implementation Dependencies.navigation_fragment
+    implementation Dependencies.navigtion_ui
+    implementation Dependencies.work_manager
+    implementation Dependencies.core_kt
+    implementation Dependencies.lifecycle_extensions
+    implementation Dependencies.lifecycle_viewmodel
+    implementation Dependencies.recyclerview
+    implementation Dependencies.paging
+    implementation Dependencies.room
+    implementation Dependencies.glide
+    implementation Dependencies.material
+    implementation Dependencies.gson
+    implementation Dependencies.coroutines_android
+    implementation Dependencies.coroutines_core
+
+
+
+}
