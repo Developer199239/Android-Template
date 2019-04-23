@@ -20,5 +20,25 @@ class MainActivity : AppCompatActivity() {
             var intent = Intent(this, RatingBarActivity::class.java)
             startActivity(intent)
         }
+
+        snackbarBtn.setOnClickListener {
+            var intent = Intent(this, SnackBarActivity::class.java)
+            startActivity(intent)
+        }
+
+        webBtn.setOnClickListener {
+            var intent = Intent(this, WebAcitivty::class.java)
+            startActivity(intent)
+        }
+
+        recyclerBtn.setOnClickListener {
+            var intent = Intent(this, RecyclerActivity::class.java)
+            startActivity(intent)
+        }
+
+        nextRecyclerViewBtn.setOnClickListener {
+            var intent = Intent(this, NestedRecyclerActivity::class.java)
+            startActivity(intent)
+        }
     }
 }
