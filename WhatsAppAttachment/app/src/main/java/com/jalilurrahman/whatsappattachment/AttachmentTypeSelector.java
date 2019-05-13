@@ -116,7 +116,8 @@ public class AttachmentTypeSelector extends PopupWindow {
 
         this.currentAnchor = anchor;
 
-        showAtLocation(anchor, Gravity.BOTTOM, 0, 0);
+        showAtLocation(anchor, Gravity.BOTTOM, 0, anchor.getHeight());
+
 
         getContentView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
@@ -257,15 +258,6 @@ public class AttachmentTypeSelector extends PopupWindow {
 
         return new Pair<>(x, y);
     }
-
-//    private class RecentPhotoSelectedListener implements RecentPhotoViewRail.OnItemClickedListener {
-//        @Override
-//        public void onItemClicked(Uri uri, String mimeType, String bucketId, long dateTaken, int width, int height, long size) {
-//            animateWindowOutTranslate(getContentView());
-//
-//            if (listener != null) listener.onQuickAttachment(uri, mimeType, bucketId, dateTaken, width, height, size);
-//        }
-//    }
 
     private class PropagatingClickListener implements View.OnClickListener {
 

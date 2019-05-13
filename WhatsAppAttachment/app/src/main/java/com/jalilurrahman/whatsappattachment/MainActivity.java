@@ -5,7 +5,9 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 public class MainActivity extends AppCompatActivity {
@@ -17,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private String TAG = MainActivity.class.getSimpleName();
 
     private ImageButton attachButton;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
+        button = findViewById(R.id.button);
+
         initializeViews();
     }
 
@@ -40,7 +46,8 @@ public class MainActivity extends AppCompatActivity {
             if (attachmentTypeSelector == null) {
                 attachmentTypeSelector = new AttachmentTypeSelector(this, getSupportLoaderManager(), new AttachmentTypeListener());
             }
-            attachmentTypeSelector.show(this, attachButton);
+            attachmentTypeSelector.show(this, button);
+//            attachmentTypeSelector.showAtLocation(button, Gravity.BOTTOM, 0, button.getHeight());
         }
 //        else {
 //            handleManualMmsRequired();
