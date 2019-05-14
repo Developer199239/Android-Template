@@ -6,20 +6,14 @@ import android.animation.ObjectAnimator;
 import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.hardware.Camera;
-import android.media.CamcorderProfile;
-import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -30,12 +24,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
 import android.widget.FrameLayout;
@@ -56,18 +46,16 @@ import com.fxn.utility.PermUtil;
 import com.fxn.utility.Utility;
 import com.fxn.utility.ui.FastScrollStateChangeListener;
 import com.wonderkiln.camerakit.CameraKit;
-import com.wonderkiln.camerakit.CameraKitEventCallback;
-import com.wonderkiln.camerakit.CameraKitImage;
 import com.wonderkiln.camerakit.CameraView;
 
+
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
-public class Pix extends AppCompatActivity implements View.OnTouchListener, View.OnClickListener,SurfaceHolder.Callback {
+public class Pix extends AppCompatActivity implements View.OnTouchListener {
 
     private static final int sBubbleAnimDuration = 1000;
     private static final int sScrollbarHideDelay = 1000;
@@ -101,17 +89,6 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener, View
     private boolean mHideScrollbar = true;
     private boolean LongSelection = false;
     private int SelectionCount = 1;
-
-    // Add by murtuza
-    private MediaRecorder recorder;
-    private SurfaceHolder holder;
-    private CamcorderProfile camcorderProfile;
-    private Camera camera;
-    boolean recording = false;
-    boolean usecamera = true;
-    boolean previewRunning = false;
-    private String LOGTAG = "VideoCapture";
-
     /*int colorPrimary = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, getTheme());
     int colorAccent = ResourcesCompat.getColor(getResources(), R.color.colorAccent, getTheme());*/
     private RecyclerView.OnScrollListener mScrollListener = new RecyclerView.OnScrollListener() {
@@ -331,13 +308,11 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener, View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         Utility.SetupStatusBarHiden(this);
         Utility.hideStatusBar(this);
         setContentView(R.layout.activity_main_lib);
         Fresco.initialize(this);
         initialize();
-        initializeVideoCapture();
     }
 
     @Override
@@ -364,7 +339,7 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener, View
         mCamera = findViewById(R.id.camera);
         mCamera.start();
         mCamera.setFocus(CameraKit.Constants.FOCUS_TAP_WITH_MARKER);
-        mCamera.setZoom(CameraKit.Constants.ZOOM_PINCH);
+//        mCamera.setZoom(CameraKit.Constants.ZOOM_PINCH);
         clickme = findViewById(R.id.clickme);
         flash = findViewById(R.id.flash);
         front = findViewById(R.id.front);
@@ -445,32 +420,21 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener, View
             }
         });*/
         
+        
         clickme.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                //https://github.com/vanevery/Custom-Video-Capture-with-Preview
-                //https://stackoverflow.com/questions/1817742/how-can-i-record-a-video-in-my-android-app
-                mCamera.stop();
-                mCamera.setVisibility(View.GONE);
-                flash.setVisibility(View.GONE);
-                front.setVisibility(View.GONE);
-                recyclerView.setVisibility(View.GONE);
-                CoordinatorLayout main_content = findViewById(R.id.main_content);
-                main_content.setVisibility(View.GONE);
+                mCamera.setCameraListener(new CameraListener() {
+                    @Override
+                    public void onVideoTaken(File video) {
+                        super.onVideoTaken(video);
+                        // The File parameter is an MP4 file.
+                    }
+                });
 
-                SurfaceView cameraView = (SurfaceView) findViewById(R.id.videoView);
-                cameraView.setVisibility(View.VISIBLE);
-                holder = cameraView.getHolder();
-                holder.addCallback(Pix.this);
-                holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
-
-                cameraView.setClickable(true);
-                cameraView.setOnClickListener(Pix.this);
-
-                return true;
+                return false;
             }
         });
-        
         
         selection_ok.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -825,158 +789,4 @@ public class Pix extends AppCompatActivity implements View.OnTouchListener, View
 
     }
 
-    private void initializeVideoCapture(){
-        camcorderProfile = CamcorderProfile.get(CamcorderProfile.QUALITY_QVGA);
-    }
-
-    private void prepareRecorder() {
-
-        camera.setDisplayOrientation(90);
-        recorder = new MediaRecorder();
-        recorder.setPreviewDisplay(holder.getSurface());
-
-        if (usecamera) {
-            camera.unlock();
-            recorder.setCamera(camera);
-        }
-
-        recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
-        recorder.setVideoSource(MediaRecorder.VideoSource.DEFAULT);
-
-        recorder.setProfile(camcorderProfile);
-
-
-        File storageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DCIM), "Camera");
-
-        // This is all very sloppy
-        if (camcorderProfile.fileFormat == MediaRecorder.OutputFormat.THREE_GPP) {
-            try {
-                File newFile = File.createTempFile("videocapture", ".3gp", storageDir);
-                recorder.setOutputFile(newFile.getAbsolutePath());
-            } catch (IOException e) {
-                Log.v(LOGTAG,"Couldn't create file");
-                e.printStackTrace();
-                finish();
-            }
-        } else if (camcorderProfile.fileFormat == MediaRecorder.OutputFormat.MPEG_4) {
-            try {
-                File newFile = File.createTempFile("videocapture", ".mp4", storageDir);
-                recorder.setOutputFile(newFile.getAbsolutePath());
-            } catch (IOException e) {
-                Log.v(LOGTAG,"Couldn't create file");
-                e.printStackTrace();
-                finish();
-            }
-        } else {
-            try {
-                File newFile = File.createTempFile("videocapture", ".mp4", storageDir);
-                recorder.setOutputFile(newFile.getAbsolutePath());
-            } catch (IOException e) {
-                Log.v(LOGTAG,"Couldn't create file");
-                e.printStackTrace();
-                finish();
-            }
-
-        }
-        //recorder.setMaxDuration(50000); // 50 seconds
-        //recorder.setMaxFileSize(5000000); // Approximately 5 megabytes
-
-        try {
-            recorder.prepare();
-        } catch (IllegalStateException e) {
-            e.printStackTrace();
-            finish();
-        } catch (IOException e) {
-            e.printStackTrace();
-            finish();
-        }
-    }
-
-    public void onClick(View v) {
-        if (recording) {
-            recorder.stop();
-            if (usecamera) {
-                try {
-                    camera.reconnect();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            // recorder.release();
-            recording = false;
-            Log.v(LOGTAG, "Recording Stopped");
-            // Let's prepareRecorder so we can record again
-            prepareRecorder();
-        } else {
-            recording = true;
-            recorder.start();
-            Log.v(LOGTAG, "Recording Started");
-        }
-    }
-
-    public void surfaceCreated(SurfaceHolder holder) {
-        Log.v(LOGTAG, "surfaceCreated");
-
-        if (usecamera) {
-            camera = Camera.open();
-
-            try {
-                camera.setPreviewDisplay(holder);
-                camera.startPreview();
-                previewRunning = true;
-            }
-            catch (IOException e) {
-                Log.e(LOGTAG,e.getMessage());
-                e.printStackTrace();
-            }
-        }
-
-    }
-
-
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Log.v(LOGTAG, "surfaceChanged");
-
-        if (!recording && usecamera) {
-            if (previewRunning){
-                camera.stopPreview();
-            }
-
-            try {
-                Camera.Parameters p = camera.getParameters();
-
-                p.setPreviewSize(camcorderProfile.videoFrameWidth, camcorderProfile.videoFrameHeight);
-                p.setPreviewFrameRate(camcorderProfile.videoFrameRate);
-
-                camera.setParameters(p);
-
-                camera.setPreviewDisplay(holder);
-                camera.startPreview();
-                previewRunning = true;
-            }
-            catch (IOException e) {
-                Log.e(LOGTAG,e.getMessage());
-                e.printStackTrace();
-            }
-
-            prepareRecorder();
-        }
-    }
-
-
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        Log.v(LOGTAG, "surfaceDestroyed");
-        if (recording) {
-            recorder.stop();
-            recording = false;
-        }
-        recorder.release();
-        if (usecamera) {
-            previewRunning = false;
-            //camera.lock();
-            camera.release();
-        }
-        finish();
-    }
 }
